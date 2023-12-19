@@ -1,7 +1,8 @@
 from collections import defaultdict 
 from Task_2_1 import load_tree
 
-PATH = "/Users/zhan/Desktop/Python/Task 2/annotations"
+script_directory = os.path.dirname(os.path.abspath(__file__))
+PATH = os.path.join(script_directory, "annotations")
 
 all_roots = load_tree(PATH)
 
