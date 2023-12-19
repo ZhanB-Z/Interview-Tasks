@@ -2,7 +2,8 @@ import xml.etree.ElementTree as ET
 from collections import defaultdict
 import os
 
-PATH = "/Users/zhan/Desktop/Python/Task 2/annotations"
+script_directory = os.path.dirname(os.path.abspath(__file__))
+PATH = os.path.join(script_directory, "annotations")
 
 def load_tree(directory_path):
     roots = {}
