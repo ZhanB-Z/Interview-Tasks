@@ -2,6 +2,11 @@ from PIL import Image, ImageDraw
 import os
 import xml.etree.ElementTree as ET 
 
+xml_file_path = "/Users/zhan/Desktop/Python/Task 3/masks.xml"
+
+images_path = "/Users/zhan/Desktop/Python/Task 3/images"
+save_path = "/Users/zhan/Desktop/Python/Task 3/modified_images"
+
 def load_masks_from_xml(xml_file_path):
     tree = ET.parse(xml_file_path)
     root = tree.getroot()
@@ -22,12 +27,7 @@ def load_masks_from_xml(xml_file_path):
     # print(masks_data)
     return masks_data
 
-xml_file_path = "/Users/zhan/Desktop/Python/Task 3/masks.xml"
 masks_data = load_masks_from_xml(xml_file_path)
-
-images_path = "/Users/zhan/Desktop/Python/Task 3/images"
-save_path = "/Users/zhan/Desktop/Python/Task 3/modified_images"
-
 
 def create_black_background_mask(image_size, masks, save_path, file_name):
 
@@ -72,16 +72,16 @@ def create_transparent_mask(image_path, masks, save_path):
     original_image.save(os.path.join(save_path, f'masked_{file_name}.png'))
     print("Original image mask created and saved successfully.")
 
-
-for image_file in os.listdir(images_path):
-    image_path = os.path.join(images_path, image_file)
-    if not image_file.lower().endswith(('.png', 'jpg')):
-        print(f"Skipping non-image file: {image_file}")
-        continue
-
-    image = Image.open(image_path)
-    file_name = os.path.splitext(os.path.basename(image_path))[0]
-
-    if image_file in masks_data:
-        create_transparent_mask(image_path, masks_data[image_file], save_path)
-        create_black_background_mask(image.size, masks_data[image_file], save_path, file_name)
+if __name__ == "__main__":
+    for image_file in os.listdir(images_path):
+        image_path = os.path.join(images_path, image_file)
+        if not image_file.lower().endswith(('.png', 'jpg')):
+            print(f"Skipping non-image file: {image_file}")
+            continue
+    
+        image = Image.open(image_path)
+        file_name = os.path.splitext(os.path.basename(image_path))[0]
+    
+        if image_file in masks_data:
+            create_transparent_mask(image_path, masks_data[image_file], save_path)
+            create_black_background_mask(image.size, masks_data[image_file], save_path, file_name)
