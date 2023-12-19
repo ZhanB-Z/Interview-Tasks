@@ -2,10 +2,12 @@ from PIL import Image, ImageDraw
 import os
 import xml.etree.ElementTree as ET 
 
-xml_file_path = "/Users/zhan/Desktop/Python/Task 3/masks.xml"
+script_directory = os.path.dirname(os.path.abspath(__file__))
 
-images_path = "/Users/zhan/Desktop/Python/Task 3/images"
-save_path = "/Users/zhan/Desktop/Python/Task 3/modified_images"
+xml_file_path = os.path.join(script_directory, "masks.xml")
+images_path = os.path.join(script_directory, "images")
+save_path = os.path.join(script_directory,"modified_images")
+
 
 def load_masks_from_xml(xml_file_path):
     tree = ET.parse(xml_file_path)
@@ -60,16 +62,20 @@ def create_transparent_mask(image_path, masks, save_path):
             # print(mask['points'])
             draw_alpha.polygon(mask['points'], fill=0)    
     
+    original_copy_layer = original_image.copy()  
+    
     draw_original = ImageDraw.Draw(original_image)
-
+    
     for mask in masks:
         if mask['label'].lower() != 'ignore':
             draw_original.polygon(mask['points'], fill=(128,0,128))    
     
     original_image.putalpha(mask_alpha)
 
+    combined_image = Image.alpha_composite(original_copy_layer, Image.alpha_composite(original_image, Image.new("RGBA", original_image.size, (0, 0, 0, 0))))
+
     file_name = os.path.splitext(os.path.basename(image_path))[0]
-    original_image.save(os.path.join(save_path, f'masked_{file_name}.png'))
+    combined_image.save(os.path.join(save_path, f'masked_{file_name}.png'))
     print("Original image mask created and saved successfully.")
 
 if __name__ == "__main__":
