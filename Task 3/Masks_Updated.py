@@ -72,7 +72,7 @@ def create_transparent_mask(image_path, masks, save_path):
     
     original_image.putalpha(mask_alpha)
 
-    combined_image = Image.alpha_composite(original_copy_layer, Image.alpha_composite(original_image, Image.new("RGBA", original_image.size, (0, 0, 0, 0))))
+    combined_image = Image.alpha_composite(original_copy_layer, original_image)
 
     file_name = os.path.splitext(os.path.basename(image_path))[0]
     combined_image.save(os.path.join(save_path, f'masked_{file_name}.png'))
